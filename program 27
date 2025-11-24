@@ -1,0 +1,16 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+int main() {
+    int fd;
+    char buf[50];
+
+    fd = open("sample.txt", O_RDWR | O_CREAT, 0644);
+    write(fd, "Welcome to OS Lab\n", 18);
+    lseek(fd, 0, SEEK_SET);
+    read(fd, buf, sizeof(buf));
+    printf("File Content: %s\n", buf);
+    close(fd);
+    return 0;
+}
