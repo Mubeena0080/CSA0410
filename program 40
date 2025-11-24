@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <sys/stat.h>
+
+int main() {
+    struct stat st;
+    char file[50];
+
+    printf("Enter filename: ");
+    scanf("%s", file);
+
+    if(stat(file, &st) == 0) {
+        printf("\nFile Permissions:\n");
+
+        printf((st.st_mode & S_IRUSR) ? "User Read    ✓\n" : "User Read    ✗\n");
+        printf((st.st_mode & S_IWUSR) ? "User Write   ✓\n" : "User Write   ✗\n");
+        printf((st.st_mode & S_IXUSR) ? "User Execute ✓\n" : "User Execute ✗\n");
+
+        printf((st.st_mode & S_IRGRP) ? "Group Read    ✓\n" : "Group Read    ✗\n");
+        printf((st.st_mode & S_IWGRP) ? "Group Write   ✓\n" : "Group Write   ✗\n");
+        printf((st.st_mode & S_IXGRP) ? "Group Execute ✓\n" : "Group Execute ✗\n");
+
+        printf((st.st_mode & S_IROTH) ? "Others Read    ✓\n" : "Others Read    ✗\n");
+        printf((st.st_mode & S_IWOTH) ? "Others Write   ✓\n" : "Others Write   ✗\n");
+        printf((st.st_mode & S_IXOTH) ? "Others Execute ✓\n" : "Others Execute ✗\n");
+    } else {
+        printf("File not found.\n");
+    }
+    return 0;
+}
