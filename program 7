@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+int main() {
+    int n;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    int bt[n], at[n], pid[n];
+    for(int i = 0; i < n; i++) {
+        pid[i] = i + 1;
+        printf("Enter burst time for P%d: ", pid[i]);
+        scanf("%d", &bt[i]);
+        printf("Enter arrival time for P%d: ", pid[i]);
+        scanf("%d", &at[i]);
+    }
+
+    int completed = 0, time = 0, minBT, shortest;
+    int wt[n], tat[n], done[n];
+    for (int i = 0; i < n; i++) done[i] = 0;
+
+    while (completed != n) {
+        minBT = 99999;
+        for (int i = 0; i < n; i++)
+            if (!done[i] && at[i] <= time && bt[i] < minBT) {
+                minBT = bt[i];
+                shortest = i;
+            }
+
+        if (minBT == 99999) { time++; continue; }
+        time += bt[shortest];
+        wt[shortest] = time - at[shortest] - bt[shortest];
+        tat[shortest] = time - at[shortest];
+        done[shortest] = 1;
+        completed++;
+    }
+
+    float totalWT = 0, totalTAT = 0;
+    printf("\nPID\tBT\tAT\tWT\tTAT\n");
+    for(int i = 0; i < n; i++) {
+        totalWT += wt[i];
+        totalTAT += tat[i];
+        printf("P%d\t%d\t%d\t%d\t%d\n", pid[i], bt[i], at[i], wt[i], tat[i]);
+    }
+
+    printf("\nAverage WT = %.2f\n", totalWT/n);
+    printf("Average TAT = %.2f\n", totalTAT/n);
+    return 0;
+}
+
+
