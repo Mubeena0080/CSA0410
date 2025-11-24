@@ -1,0 +1,28 @@
+/* program1_pid_ppid.c
+   Create a new process using fork() and display PID and PPID
+*/
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdlib.h>
+
+int main() {
+    pid_t pid;
+
+    printf("Before fork: PID = %d, PPID = %d\n", getpid(), getppid());
+
+    pid = fork();
+    if (pid < 0) {
+        perror("fork failed");
+        exit(1);
+    } else if (pid == 0) {
+        // Child process
+        printf("Child: PID = %d, PPID = %d\n", getpid(), getppid());
+        printf("Child: My parent's PID printed above is the parent's PID.\n");
+    } else {
+        // Parent process
+        printf("Parent: PID = %d, PPID = %d, child PID = %d\n", getpid(), getppid(), pid);
+    }
+
+    return 0;
+}
