@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <sys/stat.h>
+#include <pwd.h>
+#include <grp.h>
+#include <time.h>
+
+void print_perms(mode_t m) {
+    printf( (m & S_IRUSR) ? "r" : "-");
+    printf( (m & S_IWUSR) ? "w" : "-");
+    printf( (m & S_IXUSR) ? "x" : "-");
+    printf( (m & S_IRGRP) ? "r" : "-");
+    printf( (m & S_IWGRP) ? "w" : "-");
+    printf( (m & S_IXGRP) ? "x" : "-");
+    printf( (m & S_IROTH) ? "r" : "-");
+    printf( (m & S_IWOTH) ? "w" : "-");
+    printf( (m & S_IXOTH) ? "x" : "-");
+}
+
+int main(int argc, char *argv[]) {
+    const char *path = (argc > 1) ? argv[1] : __FILE__;
+    struct stat st;
+    if (stat(path, &st) < 0) { perror("stat"); return 1; }
+
+    printf("File: %s\n", path);
+    printf("Size: %ld bytes\n", (long)st.st_size);
+    printf("Permissions: ");
+    print_perms(st.st_mode);
+    printf("\n");
+
+    struct passwd *pw = getpwuid(st.st_uid);
+    struct group  *gr = getgrgid(st.st_gid);
+    printf("Owner: %s (UID %u)\n", pw ? pw->pw_name : "unknown", (unsigned)st.st_uid);
+    printf("Group: %s (GID %u)\n", gr ? gr->gr_name : "unknown", (unsigned)st.st_gid);
+    printf("Last modified: %s", ctime(&st.st_mtime));
+    return 0;
+}
